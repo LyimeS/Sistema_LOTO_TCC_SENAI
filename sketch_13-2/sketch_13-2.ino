@@ -89,7 +89,7 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);
 /*  AVISO DE BUG: 
  *  provavelmente após um determinado número de horas, a função "millis" irá estourar
  *  a memória reservada para seu funcionamento, resetando assim sua contagem, porém,
- *  isso não resetará as variáveis abaixo.
+ *  isso não resetará as variáveis abaixo. Veja a função ResetTimer()
 */
 unsigned long delay1 = 0; // delay RFID + Serial + usuários
 unsigned long delay2 = 0; // delay da mostra de temperatura na serial
@@ -149,10 +149,10 @@ byte since_hora;
 byte since_min;
 byte since_dia;
 byte since_mes;
-byte since_ano; // será usado apenas para gerar o gráfico
+byte since_ano; // será usado apenas para gerar o gráfico -------> NÃO CHEGOU A SER USADO
 
 //========================================================================
-// Configura o uso dos gráficos via Wi-Fi
+// Configura o uso dos gráficos via Wi-Fi -------> NÃO CHEGOU A SER USADO
 //========================================================================
 unsigned long inicio_manutencao;
 unsigned long fim_manutencao;
@@ -234,14 +234,14 @@ void setup() {
   
   /* Inicia  SPI bus */
   SPI.begin();
-  // Inicia MFRC522
+  /* Inicia MFRC522 */
   mfrc522.PCD_Init(); 
 
   /* configura o servo */
   servo_principal.attach(9);
 
   /* Mensagens iniciais no serial monitor */
-  Serial.println("Aproxime o seu cartao do leitor...");
+  Serial.println("Aproxime o seu cartao do leitor..."); /* obsoleto. pode ser removido ou comentado*/
   Serial.println();
 
   /* Mensagens iniciais no LCD */
@@ -296,7 +296,7 @@ void verificar_temperatura(){
       lcd.print("Alta Temperatura");
       delay (1500);
       last_screen = "alta temperatura";              /* possível melhoria no futuro: eliminar o glitch da tela de manutenção */
-      goto verificar_temperatura;                    // não funciona saporra
+      goto verificar_temperatura;                    // não funciona. apagar!
     } else {
       digitalWrite(LEDVerde, HIGH);
       digitalWrite(LEDVermelho, LOW);
@@ -315,8 +315,8 @@ void verificador_de_abertura_forcada(){
     lcd.clear();
     lcd.setCursor(0,0); 
     lcd.print("ABERTURA FORCADA");
-    lcd.setCursor(0,1); 
-    lcd.print("   DETECTADA");
+    lcd.setCursor(3,1); 
+    lcd.print("DETECTADA");
     delay(1000);
     while (true){
        /* loop infinito :) */
@@ -599,8 +599,8 @@ void Tensao(){
     lcd.clear();
     lcd.setCursor(0,0); 
     lcd.print("FALHA CONTATOR");
-    lcd.setCursor(0,1); 
-    lcd.print("   DETECTADA");
+    lcd.setCursor(3,1); 
+    lcd.print("DETECTADA");
     delay(1000);
     while (true){
        /* loop infinito :) */
@@ -679,8 +679,8 @@ void loop() {
     lcd.clear();
     lcd.setCursor(0,0); 
     lcd.print("FECHE A PORTA");
-    lcd.setCursor(0,1); 
-    lcd.print("  PARA INICIAR");
+    lcd.setCursor(2,1); 
+    lcd.print("PARA INICIAR");
     last_screen = "cadeado aberto";                   /* esta string serve para eliminar o glitch do LCD  */
     }
     else{
@@ -763,7 +763,7 @@ void loop() {
         }
         
     //////////////////////
-    // tag dos peão
+    // tags comuns
     //////////////////////
   
     if (conteudo.substring(1) == "97 44 0B 62"){     /*|Ramos| */
